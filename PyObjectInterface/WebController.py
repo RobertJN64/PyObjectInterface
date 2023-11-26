@@ -58,9 +58,11 @@ def create_WebController(obj, name, flask_app, recursion_depth = 5, create_priva
         @flask_app.route(baseurl + '/call_method/<stack>', endpoint=baseurl + '_call_method')
         def call_method(stack):
             kwargs = {argname: int(arg) for argname, arg in flask.request.args.items()} #TODO - better kwarg handling
-            poi.call_method(stack, kwargs)
-             # TODO - handle return value
-            return "OK"
+            retval = poi.call_method(stack, kwargs)
+            if retval is None:
+                return "OK"
+            else:
+                return retval
 
         @flask_app.route(baseurl + '/get_attributes', endpoint=baseurl + '_get_attributes')
         def get_attributes():
