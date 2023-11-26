@@ -1,8 +1,8 @@
-from typing import Self, Callable
+from typing_extensions import Self
 import inspect
 
 class FunctionDesc:
-    def __init__(self, func: Callable):
+    def __init__(self, func):
         self.func = func
         self.desc = func.__doc__
 
