@@ -72,7 +72,7 @@ class PyObjectInterface:
         if not method_stack.startswith(self.base_obj_name + '.'):
             raise Exception(f"Attempted to call {self.base_obj_name=} with {method_stack=}")
 
-        method_name = method_stack.removeprefix(self.base_obj_name + '.')
+        method_name = method_stack = method_stack[self.base_obj_name + '.':] #rm prefix
         if '.' in method_name:
             obj_name = method_name.split('.')[0]
             return self.subobj_dict[obj_name].call_method(method_stack, kwargs)
