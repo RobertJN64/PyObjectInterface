@@ -1,5 +1,6 @@
 from PyObjectInterface import PyObjectInterface
 from os import path
+import traceback
 import flask
 
 def generate_html(poi: PyObjectInterface, font_size=2.5):
@@ -58,11 +59,20 @@ def create_WebController(obj, name, flask_app, recursion_depth = 5, create_priva
         @flask_app.route(baseurl + '/call_method/<stack>', endpoint=baseurl + '_call_method')
         def call_method(stack):
             kwargs = {argname: int(arg) for argname, arg in flask.request.args.items()} #TODO - better kwarg handling
-            retval = poi.call_method(stack, kwargs)
-            if retval is None:
-                return "OK"
-            else:
-                return retval
+
+            try:
+                retval = poi.call_method(stack, kwargs)
+                if retval is None:
+                    return ''
+                else:
+                    return retval
+            except (Exception,):
+                traces = traceback.format_exc().split('\n')
+                for i in range(6):
+                    traces.pop(1) #remove the webcontroller call from the trace
+                trace = '\n'.join(traces)
+                return "Internal Error:\n" + trace
+
 
         @flask_app.route(baseurl + '/get_attributes', endpoint=baseurl + '_get_attributes')
         def get_attributes():

@@ -92,18 +92,21 @@
   }
 
   function call_method_handler(retval) {
-    console.log(retval) //#TODO - handle this
+    if (retval != '') {
+      console.log(retval);
+      alert(retval);
+    }
   }
 
   function call_method(stack) {
-    var elems = document.getElementsByClassName("py_" + stack)
-    url = new URL(location.href + '/call_method/' + stack)
+    var elems = document.getElementsByClassName("py_" + stack);
+    url = new URL(location.href + '/call_method/' + stack);
 
     for (var e of elems) {
       url.searchParams.append(e.id.split('|')[1], e.value);
     }
-
-    get_request_async(url, call_method_handler)
+    console.log("Calling " + url);
+    get_request_async(url, call_method_handler);
   }
 
   function update_vars(json) {
@@ -116,10 +119,10 @@
   }
 
   function update_vars_async() {
-    get_request_async(location.href + '/get_attributes', update_vars)
+    get_request_async(location.href + '/get_attributes', update_vars);
   }
 
-  setInterval(update_vars_async, 500)
+  setInterval(update_vars_async, 500);
   update_vars_async();
 </script>
 
