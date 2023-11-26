@@ -18,6 +18,8 @@ def generate_html(poi: PyObjectInterface, font_size=2.5):
             className = 'py_' + stack
             elemID = className + '|' + arg_name
             buttons += f"<span class='input_label'>{arg_name}</span>"
+            if len(default) > 0 and default[0] == "'":
+                default = '"' + default[1:-1] + '"'
             buttons += f"<input id='{elemID}' class='{className}' value='{default}'>"
         if func_desc.desc is not None:
             desc = func_desc.desc.strip().replace('\n','<br>')
@@ -45,6 +47,15 @@ def generate_html(poi: PyObjectInterface, font_size=2.5):
     </details>
     """)
 
+def smart_arg_parse(x):
+    if x == 'None':
+        return None
+    if x[0] == '"' or x[0] == "'":
+        return x[1:-1] #strip trailing and leading quotes
+    if '.' in x:
+        return float(x)
+    return int(x)
+
 def create_WebController(obj, name, flask_app, recursion_depth = 5, create_private_interface=True):
     with open(path.dirname(__file__) + '/web_controller.tpl.html') as f:
         tpl = f.read()
@@ -58,14 +69,14 @@ def create_WebController(obj, name, flask_app, recursion_depth = 5, create_priva
 
         @flask_app.route(baseurl + '/call_method/<stack>', endpoint=baseurl + '_call_method')
         def call_method(stack):
-            kwargs = {argname: int(arg) for argname, arg in flask.request.args.items()} #TODO - better kwarg handling
+            kwargs = {argname: smart_arg_parse(arg) for argname, arg in flask.request.args.items()}
 
             try:
                 retval = poi.call_method(stack, kwargs)
                 if retval is None:
                     return ''
                 else:
-                    return retval
+                    return str(retval)
             except (Exception,):
                 traces = traceback.format_exc().split('\n')
                 for i in range(6):
