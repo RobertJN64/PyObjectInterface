@@ -12,8 +12,11 @@ class Basic:
         pass
 
 def test_basic():
-    poi = PyObjectInterface(Basic, 'Basic')
+    basic = Basic()
+    poi = PyObjectInterface(basic, 'Basic')
     assert 'attr_1' in poi.attribute_list
     assert 'attr_2' in poi.attribute_list
     assert 'method_1' in poi.method_dict
     assert 'method_2' in poi.method_dict
+
+#TODO - 100% test coverage
