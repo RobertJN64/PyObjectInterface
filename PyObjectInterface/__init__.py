@@ -69,7 +69,7 @@ class PyObjectInterface:
         """
         Call a method of obj or a subobj using base_obj_name.subobj_name.method(**kwargs)
         """
-        if not self.base_obj_name.startswith(self.base_obj_name + '.'):
+        if not method_stack.startswith(self.base_obj_name + '.'):
             raise Exception(f"Attempted to call {self.base_obj_name=} with {method_stack=}")
 
         method_name = method_stack.removeprefix(self.base_obj_name + '.')
