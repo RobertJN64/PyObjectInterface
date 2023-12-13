@@ -22,7 +22,7 @@ def generate_html(poi: PyObjectInterface, font_size=2.5):
                 default = '"' + default[1:-1] + '"'
             buttons += f"<input id='{elemID}' class='{className}' value='{default}'>"
         if func_desc.desc is not None:
-            desc = func_desc.desc.strip().replace('\n','<br>')
+            desc = str(func_desc.desc).strip().replace('\n','<br>')
             buttons += f"<p>{desc}</p>"
         buttons += "<br>"
 

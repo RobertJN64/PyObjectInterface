@@ -6,8 +6,13 @@ class FunctionDesc:
         self.func = func
         self.desc = func.__doc__
 
-        params = inspect.signature(func).parameters
-        self.args = list(params.keys())
+        try:
+            params = inspect.signature(func).parameters
+            self.args = list(params.keys())
+        except ValueError:
+            params = []
+            self.args = []
+            self.func += ' **builtin (not callable from webcontroller)**'
 
         self.defaults = []
         for arg in self.args:
