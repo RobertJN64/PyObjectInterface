@@ -11,19 +11,23 @@ def generate_html(poi: PyObjectInterface, font_size=2.5):
     """
     buttons = ""
     for method_name, func_desc in poi.method_dict.items():
-        stack = poi.base_obj_name + '.' + method_name
-        onclick = f'call_method("{stack}")'
-        buttons += f"<button class='nice_button' onclick={onclick}>{method_name}</button>"
-        for arg_name, default in zip(func_desc.args, func_desc.defaults):
-            className = 'py_' + stack
-            elemID = className + '|' + arg_name
-            buttons += f"<span class='input_label'>{arg_name}</span>"
-            if len(default) > 0 and default[0] == "'":
-                default = '"' + default[1:-1] + '"'
-            buttons += f"<input id='{elemID}' class='{className}' value='{default}'>"
-        if func_desc.desc is not None:
-            desc = str(func_desc.desc).strip().replace('\n','<br>')
-            buttons += f"<p>{desc}</p>"
+        if func_desc.builtin_err:
+            buttons += f"<p>{method_name} is a builtin method and can't be accessed from WebController</p>"
+
+        else:
+            stack = poi.base_obj_name + '.' + method_name
+            onclick = f'call_method("{stack}")'
+            buttons += f"<button class='nice_button' onclick={onclick}>{method_name}</button>"
+            for arg_name, default in zip(func_desc.args, func_desc.defaults):
+                className = 'py_' + stack
+                elemID = className + '|' + arg_name
+                buttons += f"<span class='input_label'>{arg_name}</span>"
+                if len(default) > 0 and default[0] == "'":
+                    default = '"' + default[1:-1] + '"'
+                buttons += f"<input id='{elemID}' class='{className}' value='{default}'>"
+            if func_desc.desc is not None:
+                desc = str(func_desc.desc).strip().replace('\n','<br>')
+                buttons += f"<p>{desc}</p>"
         buttons += "<br>"
 
     attr_table = ""

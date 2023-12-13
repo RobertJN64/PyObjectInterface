@@ -5,6 +5,7 @@ class FunctionDesc:
     def __init__(self, func):
         self.func = func
         self.desc = func.__doc__
+        self.builtin_err = False
 
         try:
             params = inspect.signature(func).parameters
@@ -12,7 +13,7 @@ class FunctionDesc:
         except ValueError:
             params = []
             self.args = []
-            self.func += ' **builtin (not callable from webcontroller)**'
+            self.builtin_err = True
 
         self.defaults = []
         for arg in self.args:
