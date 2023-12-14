@@ -1,5 +1,6 @@
+from PyObjectInterface import PyObjectInterface, basic_attribute_types
 from PyObjectInterface.WebController import generate_html
-from PyObjectInterface import PyObjectInterface
+import numpy as np
 import pytest
 
 class Nested:
@@ -142,3 +143,28 @@ def test_html():
     class Blank: pass
     poi = PyObjectInterface(Blank(), 'Blank')
     assert 'table' not in generate_html(poi)
+
+class np_special_case:
+    def __init__(self):
+        self.np_arr = np.array([1,2,3])
+
+def test_np_special_case():
+    n = np_special_case()
+
+    poi = PyObjectInterface(n, 'b')
+    assert 'np_arr' in poi.attribute_list
+    assert 'np_arr' not in poi.subobj_dict
+
+    basic_attribute_types[str(type(n.np_arr))] = True
+
+    poi = PyObjectInterface(n, 'b')
+    assert 'np_arr' in poi.attribute_list
+    assert 'np_arr' in poi.subobj_dict
+
+    assert "is a builtin method and can't be accessed from WebController" in generate_html(poi)
+
+    basic_attribute_types.pop(str(type(n.np_arr)))
+
+    poi = PyObjectInterface(n, 'b')
+    assert 'np_arr' not in poi.attribute_list
+    assert 'np_arr' in poi.subobj_dict

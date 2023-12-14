@@ -55,3 +55,29 @@ You can use PyObjectInterface without the WebController.
  - `flask_app`: return value of flask.Flask()
  - `recursion_depth = 5`: maximum layers of subobjects to include
  - `create_private_interface = True`: if `True` creates a `/webcontroller/private` page that includes private methods and attributes
+
+### Modifying Attributes
+
+By default, POI treats `NoneType, bool, int, float, str, list, dict, tuple, and set` as primitive types.
+These show up in the attribute table instead of as recursive objects.
+
+`numpy.ndarray`, `pandas.DataFrame`, and `pandas.Series` are also treated as primitives.
+
+If you would like to customize this behavior, you can modify
+`PyObjectInterface.basic_attribute_types`
+
+For example:
+```python
+from PyObjectInterface import basic_attribute_types
+
+class My_Class_A: ...
+class My_Class_B: ...
+class My_Class_C: ...
+
+basic_attribute_types[str(type(My_Class_A()))] = False
+basic_attribute_types[str(type(My_Class_B()))] = True
+```
+
+`My_Class_A` will be treated as a primitive and only show up in the attributes table.
+`My_Class_B` will also show up in attributes table, but it still appears in the subobjects section.
+`My_Class_C` will only appear in the subobjects section.

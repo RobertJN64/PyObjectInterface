@@ -1,6 +1,22 @@
 from typing_extensions import Self
 import inspect
 
+# {type: examine_recursively}
+basic_attribute_types = {
+    str(type(None)): False,  #NoneType
+    str(type(True)): False,  #bool
+    str(type(1)): False,     #int
+    str(type(1.0)): False,   #float
+    str(type('1')): False,   #str
+    str(type([1])): False,   #list
+    str(type({1:1})): False, #dict
+    str(type((1,1))): False, #tuple
+    str(type({1})): False,   #set
+    "<class 'numpy.ndarray'>": False,
+    "<class 'pandas.core.frame.DataFrame'>": False,
+    "<class 'pandas.core.series.Series'>": False
+}
+
 class FunctionDesc:
     def __init__(self, func):
         self.func = func
@@ -48,11 +64,13 @@ class PyObjectInterface:
             all_attrs = [x for x in inspect.getmembers(obj) if x[0][0:1] != '_'] #ignore private
 
         for (attr_name, instance) in all_attrs:
+            if str(type(instance)) in basic_attribute_types:
+                self.attribute_list.append(attr_name)
+                if not basic_attribute_types[str(type(instance))]:
+                    continue #skip the rest of the checks, we don't want to examine this item recursively
+
             if hasattr(instance, '__call__'):
                 self.method_dict[attr_name] = FunctionDesc(instance)
-
-            elif isinstance(instance, (int, float, str, bool, list, dict)) or instance is None:
-                self.attribute_list.append(attr_name)
 
             elif recursion_depth > 0: #stop adding subobjects at recursion depth 0
                 # using .__class__ allows superclassing
