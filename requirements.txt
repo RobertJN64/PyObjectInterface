@@ -1,3 +1,5 @@
 typing_extensions
 flask
-numpy < 2.0.0 # 2.0.0 breaks numpy inspection...
+
+numpy < 2.0.0; python_version < "3.13"
+numpy >= 2.0.0; python_version >= "3.13"
