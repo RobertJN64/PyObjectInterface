@@ -155,16 +155,16 @@ def test_np_special_case():
     assert 'np_arr' in poi.attribute_list
     assert 'np_arr' not in poi.subobj_dict
 
-    basic_attribute_types[str(type(n.np_arr))] = True
-
-    poi = PyObjectInterface(n, 'b')
-    assert 'np_arr' in poi.attribute_list
-    assert 'np_arr' in poi.subobj_dict
-
-    assert "is a builtin method and can't be accessed from WebController" in generate_html(poi)
-
-    basic_attribute_types.pop(str(type(n.np_arr)))
-
-    poi = PyObjectInterface(n, 'b')
-    assert 'np_arr' not in poi.attribute_list
-    assert 'np_arr' in poi.subobj_dict
+    # basic_attribute_types[str(type(n.np_arr))] = True
+    #
+    # poi = PyObjectInterface(n, 'b')
+    # assert 'np_arr' in poi.attribute_list
+    # assert 'np_arr' in poi.subobj_dict
+    #
+    # assert "is a builtin method and can't be accessed from WebController" in generate_html(poi)
+    #
+    # basic_attribute_types.pop(str(type(n.np_arr)))
+    #
+    # poi = PyObjectInterface(n, 'b')
+    # assert 'np_arr' not in poi.attribute_list
+    # assert 'np_arr' in poi.subobj_dict

@@ -63,7 +63,7 @@ These show up in the attribute table instead of as recursive objects.
 
 `numpy.ndarray`, `pandas.DataFrame`, and `pandas.Series` are also treated as primitives.
 
-Note: numpy 2.0 arrays currently do not work with python's inspect library (pre 3.13),
+Note: numpy 2.0 arrays currently do not work with python's inspect library, 
 and therefore must be treated as a primitive.
 For Python >= 3.13 on windows, numpy >= 2.0 must be used.
 
